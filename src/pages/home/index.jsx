@@ -1,4 +1,4 @@
-import { Sync, Visibility } from "@mui/icons-material";
+import { Visibility } from "@mui/icons-material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import SyncAltIcon from "@mui/icons-material/SyncAlt";
 
@@ -12,6 +12,8 @@ import {
   Typography,
 } from "@mui/material";
 
+import { Outlet, useNavigate } from "react-router-dom";
+
 const style = {
   container: {
     width: "100vw",
@@ -23,6 +25,7 @@ const style = {
     alignItems: "center",
     justifyContent: "flex-start",
     borderBottom: "2px solid #e0e0e0",
+    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
     padding: "0 20px",
   },
   boxConteudo: {
@@ -134,10 +137,12 @@ const style = {
 };
 
 const Home = () => {
+  const navigate = useNavigate();
+
   return (
     <Box bgcolor={"background.default"} sx={style.container}>
       {/* Header */}
-      <Box color="background.default" position="static" sx={style.header}>
+      <Box bgcolor="background.paper" position="static" sx={style.header}>
         <Typography color="text.primary" fontWeight={"bold"} fontSize="1.6rem">
           LEAF - FH Maison
         </Typography>
@@ -217,6 +222,9 @@ const Home = () => {
             fontSize={"1.4rem"}
           >
             Dados Financeiros Gerais
+            <IconButton size="small" sx={{ marginLeft: "8px" }}>
+              <Visibility sx={{ color: "primary.main" }} />
+            </IconButton>
           </Typography>
         </Box>
         <Box sx={style.boxCards}>
@@ -244,9 +252,7 @@ const Home = () => {
               <Typography color="text.secondary" fontWeight={"bold"}>
                 Caixa Total de Entrada
               </Typography>
-              <Typography color="text.primary" fontWeight={"bold"}>
-                R$ 83.200,00
-              </Typography>
+              <Typography fontWeight={"bold"}>R$ 83.200,00</Typography>
               <Typography
                 color="text.secondary"
                 fontWeight={"bold"}
@@ -256,6 +262,26 @@ const Home = () => {
               </Typography>
               <Typography color="text.error" fontWeight={"bold"}>
                 R$ 81.535,00
+              </Typography>
+              <Typography
+                color="text.secondary"
+                fontWeight={"bold"}
+                marginTop={"10px"}
+              >
+                Gastos Fixos
+              </Typography>
+              <Typography color="text.error" fontWeight={"bold"}>
+                R$ 5.687,99
+              </Typography>
+              <Typography
+                color="text.secondary"
+                fontWeight={"bold"}
+                marginTop={"10px"}
+              >
+                Dívidas Total Pendentes
+              </Typography>
+              <Typography color="text.error" fontWeight={"bold"}>
+                R$ 74.565,49
               </Typography>
               <Typography
                 color="text.secondary"
@@ -294,9 +320,7 @@ const Home = () => {
                 <Typography color="text.secondary" fontWeight={"bold"}>
                   Entrada do Mês
                 </Typography>
-                <Typography color="text.primary" fontWeight={"bold"}>
-                  R$ 13.900,00
-                </Typography>
+                <Typography fontWeight={"bold"}>R$ 2.540,00</Typography>
                 <Typography
                   color="text.secondary"
                   fontWeight={"bold"}
@@ -305,9 +329,23 @@ const Home = () => {
                   Saída do Mês
                 </Typography>
                 <Typography color="text.error" fontWeight={"bold"}>
-                  R$ 11.735,00
+                  R$ 1.100,00
                 </Typography>
-                <Button variant="contained" sx={style.buttonCard}>
+                <Typography
+                  color="text.secondary"
+                  fontWeight={"bold"}
+                  marginTop={"10px"}
+                >
+                  Renda Mensal Total
+                </Typography>
+                <Typography fontWeight={"bold"}>R$ 1.440,00</Typography>
+                <Button
+                  variant="contained"
+                  sx={style.buttonCard}
+                  onClick={() => {
+                    navigate("/home/caixa-mensal");
+                  }}
+                >
                   Abrir Caixa
                 </Button>
               </AccordionDetails>
@@ -334,9 +372,7 @@ const Home = () => {
                 <Typography color="text.secondary" fontWeight={"bold"}>
                   Entrada do Mês
                 </Typography>
-                <Typography color="text.primary" fontWeight={"bold"}>
-                  R$ 10.500,00
-                </Typography>
+                <Typography fontWeight={"bold"}>R$ 10.500,00</Typography>
                 <Typography
                   color="text.secondary"
                   fontWeight={"bold"}
@@ -347,6 +383,14 @@ const Home = () => {
                 <Typography color="text.error" fontWeight={"bold"}>
                   R$ 9.200,00
                 </Typography>
+                <Typography
+                  color="text.secondary"
+                  fontWeight={"bold"}
+                  marginTop={"10px"}
+                >
+                  Renda Mensal Total
+                </Typography>
+                <Typography fontWeight={"bold"}>R$ 1.440,00</Typography>
                 <Button variant="contained" sx={style.buttonCard}>
                   Abrir Caixa
                 </Button>
@@ -374,9 +418,7 @@ const Home = () => {
                 <Typography color="text.secondary" fontWeight={"bold"}>
                   Entrada do Mês
                 </Typography>
-                <Typography color="text.primary" fontWeight={"bold"}>
-                  R$ 16.200,00
-                </Typography>
+                <Typography fontWeight={"bold"}>R$ 16.200,00</Typography>
                 <Typography
                   color="text.secondary"
                   fontWeight={"bold"}
@@ -387,6 +429,14 @@ const Home = () => {
                 <Typography color="text.error" fontWeight={"bold"}>
                   R$ 14.285,00
                 </Typography>
+                <Typography
+                  color="text.secondary"
+                  fontWeight={"bold"}
+                  marginTop={"10px"}
+                >
+                  Renda Mensal Total
+                </Typography>
+                <Typography fontWeight={"bold"}>R$ 1.440,00</Typography>
                 <Button variant="contained" sx={style.buttonCard}>
                   Abrir Caixa
                 </Button>

@@ -14,6 +14,7 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import Home from "./pages/home";
 
 import "./main.css";
+import CaixaMensal from "./pages/caixaMensal";
 
 const theme = createTheme({
   palette: {
@@ -34,6 +35,7 @@ const theme = createTheme({
       primary: "#00e08e",
       secondary: "#555555",
       tertiary: "#ffffff",
+      quaternary: "#000000",
       error: "#E53935",
       warning: "#FFB300",
     },
@@ -55,6 +57,7 @@ function App() {
         <ErrorBoundary>
           <Routes>
             <Route path="/home" element={<Home />} />
+            <Route path="/home/caixa-mensal" element={<CaixaMensal />} />
             <Route path="*" element={<Navigate to="/home" replace />} />
           </Routes>
         </ErrorBoundary>
