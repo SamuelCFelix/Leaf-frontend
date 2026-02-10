@@ -144,7 +144,7 @@ const CaixaMensal = () => {
   const navigate = useNavigate();
 
   return (
-    <Box bgcolor={"background.default"} sx={style.container}>
+    <Box sx={style.container}>
       {/* Header */}
       <Box bgcolor="background.paper" position="static" sx={style.header}>
         <Typography color="text.primary" fontWeight={"bold"} fontSize="1.6rem">
