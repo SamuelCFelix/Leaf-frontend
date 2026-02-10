@@ -15,6 +15,7 @@ import Home from "./pages/home";
 
 import "./main.css";
 import CaixaMensal from "./pages/caixaMensal";
+import Layout from "./layout";
 
 const theme = createTheme({
   palette: {
@@ -35,7 +36,7 @@ const theme = createTheme({
       primary: "#00e08e",
       secondary: "#555555",
       tertiary: "#ffffff",
-      quaternary: "#000000",
+      quaternary: "#1b1b1b",
       error: "#E53935",
       warning: "#FFB300",
     },
@@ -56,8 +57,10 @@ function App() {
       <Router>
         <ErrorBoundary>
           <Routes>
-            <Route path="/home" element={<Home />} />
-            <Route path="/home/caixa-mensal" element={<CaixaMensal />} />
+            <Route path="/home" element={<Layout />}>
+              <Route index element={<Home />} />
+              <Route path="caixa-mensal" element={<CaixaMensal />} />
+            </Route>
             <Route path="*" element={<Navigate to="/home" replace />} />
           </Routes>
         </ErrorBoundary>

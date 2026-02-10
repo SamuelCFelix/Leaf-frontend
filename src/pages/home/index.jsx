@@ -16,17 +16,8 @@ import { Outlet, useNavigate } from "react-router-dom";
 
 const style = {
   container: {
-    width: "100vw",
-    height: "100vh",
-  },
-  header: {
-    height: "10vh",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "flex-start",
-    borderBottom: "2px solid #e0e0e0",
-    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-    padding: "0 20px",
+    width: "100%",
+    height: "100%",
   },
   boxConteudo: {
     width: "100%",
@@ -42,7 +33,7 @@ const style = {
     display: "flex",
     alignItems: "center",
     justifyContent: "flex-start",
-    padding: "20px 20px 10px 20px",
+    padding: "20px 20px 6px 20px",
   },
   boxCards: {
     width: "100%",
@@ -51,7 +42,7 @@ const style = {
     justifyContent: "flex-start",
     flexWrap: "wrap",
     gap: "20px",
-    padding: "0px 20px",
+    padding: "0px 20px 5px 20px",
   },
   cardValores: {
     minWidth: "190px",
@@ -62,7 +53,7 @@ const style = {
     justifyContent: "flex-start",
     padding: "10px",
     backgroundColor: "#ffffff",
-    border: "2px solid #00e08e",
+    border: "1px solid #00e08e",
     borderTopLeftRadius: "25px",
     borderBottomRightRadius: "25px",
     boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
@@ -76,7 +67,7 @@ const style = {
     width: "250px",
     flexShrink: 0,
     backgroundColor: "#ffffff",
-    border: "2px solid #00e08e",
+    border: "1px solid #00e08e",
     boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
     overflow: "hidden",
     transition: "all 0.2s ease-in-out",
@@ -112,7 +103,7 @@ const style = {
     width: "200px",
     flexShrink: 0,
     backgroundColor: "#ffffff",
-    border: "2px solid #00e08e",
+    border: "1px solid #00e08e",
     boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
     overflow: "hidden",
     transition: "all 0.2s ease-in-out",
@@ -141,13 +132,6 @@ const Home = () => {
 
   return (
     <Box sx={style.container}>
-      {/* Header */}
-      <Box bgcolor="background.paper" position="static" sx={style.header}>
-        <Typography color="text.primary" fontWeight={"bold"} fontSize="1.6rem">
-          LEAF - FH Maison
-        </Typography>
-      </Box>
-
       {/* Conteúdo principal */}
       <Box sx={style.boxConteudo}>
         {/* Caixa Geral */}
@@ -340,7 +324,7 @@ const Home = () => {
                 </Typography>
                 <Typography fontWeight={"bold"}>R$ 1.440,00</Typography>
                 <Button
-                  variant="contained"
+                  variant="outlined"
                   sx={style.buttonCard}
                   onClick={() => {
                     navigate("/home/caixa-mensal");
@@ -350,7 +334,7 @@ const Home = () => {
                 </Button>
               </AccordionDetails>
             </Accordion>
-            <Accordion defaultExpanded sx={style.accordionFluxoMensal}>
+            <Accordion sx={style.accordionFluxoMensal}>
               <AccordionSummary
                 expandIcon={
                   <ExpandMoreIcon
@@ -396,7 +380,7 @@ const Home = () => {
                 </Button>
               </AccordionDetails>
             </Accordion>
-            <Accordion defaultExpanded sx={style.accordionFluxoMensal}>
+            <Accordion sx={style.accordionFluxoMensal}>
               <AccordionSummary
                 expandIcon={
                   <ExpandMoreIcon
