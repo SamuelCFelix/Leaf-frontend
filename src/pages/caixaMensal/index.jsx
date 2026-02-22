@@ -35,11 +35,13 @@ import {
   IconButton,
   InputAdornment,
   InputLabel,
+  Menu,
   MenuItem,
   Radio,
   RadioGroup,
   Select,
   TextField,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
@@ -239,27 +241,54 @@ const style = {
 
 const CaixaMensal = () => {
   /* Variáveis de Estado */
-  const [openDialog, setOpenDialog] = useState(false);
+  const [openDialogRegistro, setOpenDialogRegistro] = useState(false);
   const [valueTipoRegistro, setValueTipoRegistro] = useState("entrada");
   const [valueTipoEntrada, setValueTipoEntrada] = useState("venda");
-  const [valueFormaPagamento, setValueFormaPagamento] = useState("credito");
+  const [valueFormaPagamentoEntrada, setValueFormaPagamentoEntrada] =
+    useState("credito");
   const [valueTimePicker, setValueTimePicker] = useState(dayjs());
   const [valueTransferencia, setValueTransferencia] = useState("0,00");
   const [valueParcelas, setValueParcelas] = useState("1x");
   const [valueBandeiraCartao, setValueBandeiraCartao] = useState("mastercard");
+  const [valuePixMaquininha, setValuePixMaquininha] = useState("sim");
+  const [valueTipoSaida, setValueTipoSaida] = useState("compra");
+  const [valueFormaPagamentoSaida, setValueFormaPagamentoSaida] =
+    useState("pix");
+  const [valueGrupoSaida, setValueGrupoSaida] = useState("alimentacao");
   const [valueObservacaoRegistro, setValueObservacaoRegistro] = useState("");
+  const [anchorElMenuCardRegistro, setAnchorElMenuCardRegistro] =
+    useState(null);
+  const [openDialogDeletarRegistro, setOpenDialogDeletarRegistro] =
+    useState(false);
 
   const navigate = useNavigate();
 
   const parcelasArray = Array.from({ length: 12 }, (_, i) => i + 1);
-
-  /* Funções */
-  const handleOpenDialog = () => {
-    setOpenDialog(true);
+  const grupos = {
+    /* Saídas */
+    compra: [
+      { value: "alimentacao", label: "Alimentação" },
+      { value: "material-loja", label: "Material Loja" },
+      { value: "aquisicao", label: "Aquisição" },
+      { value: "outro", label: "Outro" },
+    ],
+    pagamento: [
+      { value: "divida", label: "Dívida" },
+      { value: "conta", label: "Conta" },
+      { value: "funcionario", label: "Funcionário" },
+      { value: "servico", label: "Serviço" },
+      { value: "outro", label: "Outro" },
+    ],
   };
 
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
+  /* Funções */
+  const handleOpenDialogRegistro = () => {
+    setOpenDialogRegistro(true);
+    handleCloseMenuCardRegistro();
+  };
+
+  const handleCloseDialogRegistro = () => {
+    setOpenDialogRegistro(false);
   };
 
   const handleChangeValueTipoRegistro = (event) => {
@@ -270,8 +299,8 @@ const CaixaMensal = () => {
     setValueTipoEntrada(event.target.value);
   };
 
-  const handleChangeValueFormaPagamento = (event) => {
-    setValueFormaPagamento(event.target.value);
+  const handleChangeValueFormaPagamentoEntrada = (event) => {
+    setValueFormaPagamentoEntrada(event.target.value);
   };
 
   const handleChangeValueTransferencia = (e) => {
@@ -298,6 +327,46 @@ const CaixaMensal = () => {
 
   const handleChangeValueObservacaoRegistro = (event) => {
     setValueObservacaoRegistro(event.target.value);
+  };
+
+  const handleChangeValuePixMaquininha = (event) => {
+    setValuePixMaquininha(event.target.value);
+  };
+
+  const handleChangeValueTipoSaida = (event) => {
+    setValueTipoSaida(event.target.value);
+
+    if (event.target.value === "compra") {
+      setValueGrupoSaida("alimentacao");
+    }
+
+    if (event.target.value === "pagamento") {
+      setValueGrupoSaida("divida");
+    }
+  };
+
+  const handleChangeValueFormaPagamentoSaida = (event) => {
+    setValueFormaPagamentoSaida(event.target.value);
+  };
+
+  const handleChangeValueGrupoSaida = (event) => {
+    setValueGrupoSaida(event.target.value);
+  };
+
+  const handleClickOpenMenuCardRegistro = (event) => {
+    setAnchorElMenuCardRegistro(event.currentTarget);
+  };
+  const handleCloseMenuCardRegistro = () => {
+    setAnchorElMenuCardRegistro(null);
+  };
+
+  const handleOpenDialogDeletarRegistro = () => {
+    setOpenDialogDeletarRegistro(true);
+    handleCloseMenuCardRegistro();
+  };
+
+  const handleCloseDialogDeletarRegistro = () => {
+    setOpenDialogDeletarRegistro(false);
   };
 
   return (
@@ -572,7 +641,7 @@ const CaixaMensal = () => {
                   <Button
                     variant="outlined"
                     sx={style.buttonCard}
-                    onClick={handleOpenDialog}
+                    onClick={handleOpenDialogRegistro}
                   >
                     FAZER REGISTRO
                   </Button>
@@ -610,13 +679,42 @@ const CaixaMensal = () => {
                       gap: "8px",
                     }}
                   >
-                    <IconButton>
-                      <InfoOutline />
-                    </IconButton>
-                    <IconButton>
+                    <Tooltip title={valueObservacaoRegistro}>
+                      <IconButton>
+                        <InfoOutline />
+                      </IconButton>
+                    </Tooltip>
+
+                    <IconButton
+                      onClick={(event) => {
+                        handleClickOpenMenuCardRegistro(event);
+                      }}
+                    >
                       <MoreVert />
                     </IconButton>
                   </Box>
+
+                  <Menu
+                    id="basic-menu"
+                    anchorEl={anchorElMenuCardRegistro}
+                    open={anchorElMenuCardRegistro}
+                    onClose={handleCloseMenuCardRegistro}
+                    slotProps={{
+                      list: {
+                        "aria-labelledby": "basic-button",
+                      },
+                    }}
+                  >
+                    <MenuItem onClick={handleOpenDialogRegistro}>
+                      Editar
+                    </MenuItem>
+                    <MenuItem
+                      sx={{ color: "red" }}
+                      onClick={handleOpenDialogDeletarRegistro}
+                    >
+                      Deletar
+                    </MenuItem>
+                  </Menu>
                 </Box>
 
                 <Box
@@ -661,61 +759,11 @@ const CaixaMensal = () => {
               </Box>
             </AccordionDetails>
           </Accordion>
-
-          <Accordion sx={style.accordionCaixaDiario}>
-            <AccordionSummary
-              expandIcon={
-                <ExpandMoreIcon
-                  sx={{ color: "primary.main", fontSize: "1.8rem" }}
-                />
-              }
-              aria-controls="panel1-content"
-              id="panel1-header"
-            >
-              <Typography
-                color="text.secondary"
-                fontWeight="bold"
-                component="span"
-              >
-                02/02/2026 - SEGUNDA-FEIRA
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails sx={style.accordionCaixaDetails}>
-              <Box sx={style.boxTitulosCaixaDetails}>
-                <Box sx={style.boxInfoCaixaDetails}>
-                  <Typography color="text.secondary" fontWeight={"bold"}>
-                    Faturamento
-                  </Typography>
-                  <Typography fontWeight={"bold"}>R$ 16.200,00</Typography>
-                </Box>
-                <Box sx={style.boxInfoCaixaDetails}>
-                  <Typography color="text.secondary" fontWeight={"bold"}>
-                    Entrada do Dia
-                  </Typography>
-                  <Typography color="text.primary" fontWeight={"bold"}>
-                    R$ 14.285,00
-                  </Typography>
-                </Box>
-                <Box sx={style.boxInfoCaixaDetails}>
-                  <Typography color="text.secondary" fontWeight={"bold"}>
-                    Saída do Dia
-                  </Typography>
-                  <Typography color="text.error" fontWeight={"bold"}>
-                    -R$ 1.440,00
-                  </Typography>
-                </Box>
-              </Box>
-
-              <Button variant="outlined" sx={style.buttonCard}>
-                FAZER REGISTRO
-              </Button>
-            </AccordionDetails>
-          </Accordion>
         </Box>
       </Box>
 
       {/* Diálog/Modal */}
-      <Dialog open={openDialog} onClose={handleCloseDialog}>
+      <Dialog open={openDialogRegistro} onClose={handleCloseDialogRegistro}>
         <DialogTitle id="alert-dialog-title" fontSize={"1.4rem"}>
           {"Fazer Registro de Caixa"}
         </DialogTitle>
@@ -785,8 +833,8 @@ const CaixaMensal = () => {
                   </InputLabel>
                   <Select
                     id="demo-simple-select-standard"
-                    value={valueFormaPagamento}
-                    onChange={handleChangeValueFormaPagamento}
+                    value={valueFormaPagamentoEntrada}
+                    onChange={handleChangeValueFormaPagamentoEntrada}
                     label="Forma de Pagamento"
                     sx={style.estiloSelect}
                   >
@@ -862,60 +910,232 @@ const CaixaMensal = () => {
                     ),
                   }}
                 />
-                <FormControl variant="standard" sx={{ minWidth: 140 }}>
-                  <InputLabel id="parcelamento-label">Parcelamento</InputLabel>
-                  <Select
-                    labelId="parcelamento-label"
-                    id="parcelamento"
-                    value={valueParcelas}
-                    onChange={handleChangeValueParcelas}
-                    label="Parcelamento"
-                    sx={style.estiloSelect}
-                    MenuProps={{
-                      PaperProps: {
-                        sx: {
-                          maxHeight: 200,
+                {valueFormaPagamentoEntrada === "credito" && (
+                  <FormControl variant="standard" sx={{ minWidth: 140 }}>
+                    <InputLabel id="parcelamento-label">
+                      Parcelamento
+                    </InputLabel>
+                    <Select
+                      labelId="parcelamento-label"
+                      id="parcelamento"
+                      value={valueParcelas}
+                      onChange={handleChangeValueParcelas}
+                      label="Parcelamento"
+                      sx={style.estiloSelect}
+                      MenuProps={{
+                        PaperProps: {
+                          sx: {
+                            maxHeight: 200,
+                          },
                         },
-                      },
-                    }}
-                  >
-                    {parcelasArray.map((num) => (
+                      }}
+                    >
+                      {parcelasArray.map((num) => (
+                        <MenuItem
+                          key={num}
+                          value={`${num}x`}
+                          sx={{ color: "text.secondary" }}
+                        >
+                          {num === 1 ? "À vista" : `${num}x Parcelas`}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                )}
+
+                {(valueFormaPagamentoEntrada === "credito" ||
+                  valueFormaPagamentoEntrada === "debito") && (
+                  <FormControl variant="standard" sx={{ minWidth: 140 }}>
+                    <InputLabel id="demo-simple-select-standard-label">
+                      Bandeira Cartão
+                    </InputLabel>
+                    <Select
+                      id="demo-simple-select-standard"
+                      value={valueBandeiraCartao}
+                      onChange={handleChangeValueBandeiraCartao}
+                      label="Bandeira Cartão"
+                      sx={style.estiloSelect}
+                    >
                       <MenuItem
-                        key={num}
-                        value={`${num}x`}
                         sx={{ color: "text.secondary" }}
+                        value={"mastercard"}
                       >
-                        {num === 1 ? "À vista" : `${num}x Parcelas`}
+                        Mastercard
                       </MenuItem>
-                    ))}
+                      <MenuItem sx={{ color: "text.secondary" }} value={"visa"}>
+                        Visa
+                      </MenuItem>
+                      <MenuItem sx={{ color: "text.secondary" }} value={"elo"}>
+                        Elo
+                      </MenuItem>
+                      <MenuItem sx={{ color: "text.secondary" }} value={"amex"}>
+                        Amex
+                      </MenuItem>
+                    </Select>
+                  </FormControl>
+                )}
+
+                {valueFormaPagamentoEntrada === "pix" && (
+                  <FormControl variant="standard" sx={{ minWidth: 140 }}>
+                    <InputLabel id="demo-simple-select-standard-label">
+                      PIX na Maquininha
+                    </InputLabel>
+                    <Select
+                      id="demo-simple-select-standard"
+                      value={valuePixMaquininha}
+                      onChange={handleChangeValuePixMaquininha}
+                      label="PIX na Maquininha"
+                      sx={style.estiloSelect}
+                    >
+                      <MenuItem sx={{ color: "text.secondary" }} value={"sim"}>
+                        Sim
+                      </MenuItem>
+                      <MenuItem sx={{ color: "text.secondary" }} value={"nao"}>
+                        Não
+                      </MenuItem>
+                    </Select>
+                  </FormControl>
+                )}
+              </Box>
+              <TextField
+                label="Observação"
+                variant="standard"
+                size="small"
+                value={valueObservacaoRegistro}
+                onChange={handleChangeValueObservacaoRegistro}
+                sx={{
+                  width: "100%",
+                  "& .MuiInputBase-input": {
+                    color: "text.secondary",
+                  },
+                }}
+              />
+            </>
+          ) : (
+            <>
+              <Box sx={style.boxInputsRegistro}>
+                <FormControl variant="standard" sx={{ minWidth: 140 }}>
+                  <InputLabel id="demo-simple-select-standard-label">
+                    Tipo de Saída
+                  </InputLabel>
+                  <Select
+                    id="demo-simple-select-standard"
+                    value={valueTipoSaida}
+                    onChange={handleChangeValueTipoSaida}
+                    label="Tipo de Saída"
+                    sx={style.estiloSelect}
+                  >
+                    <MenuItem sx={{ color: "text.secondary" }} value={"compra"}>
+                      Compra
+                    </MenuItem>
+                    <MenuItem
+                      sx={{ color: "text.secondary" }}
+                      value={"pagamento"}
+                    >
+                      Pagamento
+                    </MenuItem>
                   </Select>
                 </FormControl>
                 <FormControl variant="standard" sx={{ minWidth: 140 }}>
                   <InputLabel id="demo-simple-select-standard-label">
-                    Bandeira Cartão
+                    Forma de Pagamento
                   </InputLabel>
                   <Select
                     id="demo-simple-select-standard"
-                    value={valueBandeiraCartao}
-                    onChange={handleChangeValueBandeiraCartao}
-                    label="Bandeira Cartão"
+                    value={valueFormaPagamentoSaida}
+                    onChange={handleChangeValueFormaPagamentoSaida}
+                    label="Forma de Pagamento"
                     sx={style.estiloSelect}
                   >
+                    {/* <MenuItem sx={{ color: "text.secondary" }} value={"credito"}>
+                    Crédito
+                  </MenuItem>
+                  <MenuItem sx={{ color: "text.secondary" }} value={"debito"}>
+                    Débito
+                  </MenuItem> */}
+                    <MenuItem sx={{ color: "text.secondary" }} value={"pix"}>
+                      PIX
+                    </MenuItem>
                     <MenuItem
                       sx={{ color: "text.secondary" }}
-                      value={"mastercard"}
+                      value={"dinheiro"}
                     >
-                      Mastercard
+                      Dinheiro
                     </MenuItem>
-                    <MenuItem sx={{ color: "text.secondary" }} value={"visa"}>
-                      Visa
-                    </MenuItem>
-                    <MenuItem sx={{ color: "text.secondary" }} value={"elo"}>
-                      Elo
-                    </MenuItem>
-                    <MenuItem sx={{ color: "text.secondary" }} value={"amex"}>
-                      Amex
-                    </MenuItem>
+                  </Select>
+                </FormControl>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <TimePicker
+                    value={valueTimePicker}
+                    onChange={(newValue) => setValueTimePicker(newValue)}
+                    ampm={false}
+                    format="HH:mm"
+                    label="Horário da Transferência"
+                    slotProps={{
+                      textField: {
+                        variant: "standard",
+                        size: "small",
+                        placeholder: "Horário",
+                        InputProps: {
+                          sx: {
+                            color: "text.secondary",
+                            "&::placeholder": {
+                              color: "text.secondary",
+                            },
+                          },
+                        },
+                        sx: {
+                          width: 140,
+                        },
+                      },
+                    }}
+                  />
+                </LocalizationProvider>
+              </Box>
+              <Box sx={style.boxInputsRegistro}>
+                <TextField
+                  label="Valor"
+                  variant="standard"
+                  size="small"
+                  value={valueTransferencia}
+                  onChange={handleChangeValueTransferencia}
+                  sx={{
+                    width: 140,
+                    "& .MuiInputBase-input": {
+                      color: "text.secondary",
+                    },
+                  }}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment
+                        position="start"
+                        sx={{ marginBottom: "4px" }}
+                      >
+                        R$
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+                <FormControl variant="standard" sx={{ minWidth: 140 }}>
+                  <InputLabel id="demo-simple-select-standard-label">
+                    Grupo
+                  </InputLabel>
+                  <Select
+                    id="demo-simple-select-standard"
+                    value={valueGrupoSaida}
+                    onChange={handleChangeValueGrupoSaida}
+                    label="Grupo"
+                    sx={style.estiloSelect}
+                  >
+                    {grupos[valueTipoSaida]?.map((item) => (
+                      <MenuItem
+                        key={item.value}
+                        sx={{ color: "text.secondary" }}
+                        value={item.value}
+                      >
+                        {item.label}
+                      </MenuItem>
+                    ))}
                   </Select>
                 </FormControl>
               </Box>
@@ -933,16 +1153,48 @@ const CaixaMensal = () => {
                 }}
               />
             </>
-          ) : (
-            <Box>Saída</Box>
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDialog} color="error">
+          <Button onClick={handleCloseDialogRegistro} color="error">
             Cancelar
           </Button>
-          <Button onClick={handleCloseDialog} autoFocus>
+          <Button
+            disabled={
+              valueTransferencia === "0,00" ||
+              (valueTipoRegistro === "saida" &&
+                valueGrupoSaida === "outro" &&
+                valueObservacaoRegistro === "")
+            }
+            onClick={handleCloseDialogRegistro}
+            autoFocus
+          >
             Registrar
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={openDialogDeletarRegistro}
+        onClose={handleCloseDialogDeletarRegistro}
+      >
+        <DialogTitle id="alert-dialog-title" fontSize={"1.4rem"} color="error">
+          {"Deletar Registro de Caixa"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Deseja mesmo deletar esse registro?
+          </DialogContentText>
+          <Box sx={style.boxTopoConteudoDialog}></Box>
+        </DialogContent>
+        <DialogActions sx={{ marginTop: "-30px" }}>
+          <Button onClick={handleCloseDialogDeletarRegistro}>Cancelar</Button>
+          <Button
+            onClick={handleCloseDialogDeletarRegistro}
+            autoFocus
+            color="error"
+          >
+            Confirmar
           </Button>
         </DialogActions>
       </Dialog>
