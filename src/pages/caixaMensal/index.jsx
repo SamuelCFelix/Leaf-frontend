@@ -14,6 +14,7 @@ import {
   Settings,
   ShoppingCart,
   Store,
+  SyncAlt,
   Visibility,
 } from "@mui/icons-material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -260,6 +261,50 @@ const CaixaMensal = () => {
     useState(null);
   const [openDialogDeletarRegistro, setOpenDialogDeletarRegistro] =
     useState(false);
+  /* const [dataCaixaMensal, setDataCaixaMensal] = useState([]);
+   */
+  const dataCaixaMensal = [
+    {
+      id: 1,
+      dia: "01/02/2026 - DOMINGO",
+      faturamentoDia: "750,00",
+      entradaDia: "850,00",
+      saidaDia: "100,00",
+      registros: [
+        {
+          registro: "entrada",
+          tipoRegistro: "venda",
+          formaPagamentoRegistro: "credito",
+          horarioRegistro: "15:10",
+          valorRegistro: "250,00",
+          parcelaRegistro: "4x",
+          bandeiraCartaoRegistro: "mastercard",
+          valorTaxaRegistro: "22,55",
+          valorRecebido: "227,45",
+          observacaoRegistro: "Pagamento feito pela metade",
+        },
+        {
+          registro: "entrada",
+          tipoRegistro: "venda",
+          formaPagamentoRegistro: "pix",
+          horarioRegistro: "12:10",
+          valorRegistro: "450,00",
+          pixMaquininha: true,
+          valorTaxaRegistro: "3,37",
+          valorRecebido: "446,62",
+          observacaoRegistro: "Pagamento Completo",
+        },
+      ],
+    },
+    {
+      id: 2,
+      dia: "02/02/2026 - SEGUNDA-FEIRA",
+      faturamentoDia: "1000,00",
+      entradaDia: "2050,00",
+      saidaDia: "1050,00",
+      registros: [],
+    },
+  ];
 
   const navigate = useNavigate();
 
@@ -594,172 +639,229 @@ const CaixaMensal = () => {
         </Box>
 
         {/* Caixas */}
-        <Box sx={style.boxCaixasDiario}>
-          <Accordion sx={style.accordionCaixaDiario}>
-            <AccordionSummary
-              expandIcon={
-                <ExpandMoreIcon
-                  sx={{ color: "primary.main", fontSize: "1.8rem" }}
-                />
-              }
-              aria-controls="panel1-content"
-              id="panel1-header"
-            >
-              <Typography
-                color="text.secondary"
-                fontWeight="bold"
-                component="span"
+        {dataCaixaMensal?.map((data) => (
+          <Box sx={style.boxCaixasDiario} key={data.id}>
+            <Accordion sx={style.accordionCaixaDiario}>
+              <AccordionSummary
+                expandIcon={
+                  <ExpandMoreIcon
+                    sx={{ color: "primary.main", fontSize: "1.8rem" }}
+                  />
+                }
+                aria-controls="panel1-content"
+                id={data.id}
               >
-                01/02/2026 - DOMINGO
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails sx={style.accordionCaixaDetails}>
-              <Box sx={style.boxTitulosCaixaDetails}>
-                <Box sx={style.boxInfoCaixaDetails}>
-                  <Typography color="text.secondary" fontWeight={"bold"}>
-                    Faturamento
-                  </Typography>
-                  <Typography fontWeight={"bold"}>R$ 16.200,00</Typography>
+                <Typography
+                  color="text.secondary"
+                  fontWeight="bold"
+                  component="span"
+                >
+                  {data.dia}
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails sx={style.accordionCaixaDetails}>
+                <Box sx={style.boxTitulosCaixaDetails}>
+                  <Box sx={style.boxInfoCaixaDetails}>
+                    <Typography color="text.secondary" fontWeight={"bold"}>
+                      Faturamento do Dia
+                    </Typography>
+                    <Typography fontWeight={"bold"}>
+                      R$ {data.faturamentoDia}
+                    </Typography>
+                  </Box>
+                  <Box sx={style.boxInfoCaixaDetails}>
+                    <Typography color="text.secondary" fontWeight={"bold"}>
+                      Entrada do Dia
+                    </Typography>
+                    <Typography color="text.primary" fontWeight={"bold"}>
+                      R$ {data.entradaDia}
+                    </Typography>
+                  </Box>
+                  <Box sx={style.boxInfoCaixaDetails}>
+                    <Typography color="text.secondary" fontWeight={"bold"}>
+                      Saída do Dia
+                    </Typography>
+                    <Typography color="text.error" fontWeight={"bold"}>
+                      -R$ {data.saidaDia}
+                    </Typography>
+                  </Box>
+                  <Box sx={style.boxBotaoFazerRegistro}>
+                    <Button
+                      variant="outlined"
+                      sx={style.buttonCard}
+                      onClick={handleOpenDialogRegistro}
+                    >
+                      FAZER REGISTRO
+                    </Button>
+                  </Box>
                 </Box>
-                <Box sx={style.boxInfoCaixaDetails}>
-                  <Typography color="text.secondary" fontWeight={"bold"}>
-                    Entrada do Dia
-                  </Typography>
-                  <Typography color="text.primary" fontWeight={"bold"}>
-                    R$ 14.285,00
-                  </Typography>
-                </Box>
-                <Box sx={style.boxInfoCaixaDetails}>
-                  <Typography color="text.secondary" fontWeight={"bold"}>
-                    Saída do Dia
-                  </Typography>
-                  <Typography color="text.error" fontWeight={"bold"}>
-                    -R$ 1.440,00
-                  </Typography>
-                </Box>
-                <Box sx={style.boxBotaoFazerRegistro}>
-                  <Button
-                    variant="outlined"
-                    sx={style.buttonCard}
-                    onClick={handleOpenDialogRegistro}
-                  >
-                    FAZER REGISTRO
-                  </Button>
-                </Box>
-              </Box>
 
-              <Box sx={style.boxListCardRegistro}>
-                <Box sx={style.cardRegistro}>
-                  <Box sx={style.boxValorCardRegistro}>
-                    <ShoppingCart />
-                    <Typography>R$ 250,00</Typography>
-                  </Box>
-                  <Box sx={style.boxValorCardRegistro}>
-                    <Payment sx={{ color: "text.quaternary" }} />
-                    <Typography color="text.quaternary">3x Crédito</Typography>
-                  </Box>
-                  <Box sx={style.boxValorCardRegistro}>
-                    <CurrencyExchange sx={{ color: "text.warning" }} />
-                    <Typography color="text.warning">-R$ 20,00</Typography>
-                  </Box>
-                  <Box sx={style.boxValorCardRegistro}>
-                    <Receipt />
-                    <Typography>R$ 230,00</Typography>
-                  </Box>
-                  <Box sx={style.boxValorCardRegistro}>
-                    <AccessTime sx={{ color: "text.quaternary" }} />
-                    <Typography color="text.quaternary"> 14:46</Typography>
-                  </Box>
+                {data?.registros?.length > 0 && (
+                  <Box sx={style.boxListCardRegistro}>
+                    {data?.registros?.map((dataReg) => (
+                      <Box
+                        sx={{
+                          ...style.cardRegistro,
+                          borderLeftColor:
+                            dataReg.registro === "saida" ? "text.error" : "",
+                        }}
+                      >
+                        <Box sx={style.boxValorCardRegistro}>
+                          {dataReg?.tipoRegistro === "venda" && (
+                            <ShoppingCart />
+                          )}
+                          {dataReg?.tipoRegistro === "transferencia" && (
+                            <SyncAlt />
+                          )}
+                          <Typography>R$ {dataReg.valorRegistro}</Typography>
+                        </Box>
+                        <Box sx={style.boxValorCardRegistro}>
+                          {dataReg?.formaPagamentoRegistro === "credito" && (
+                            <>
+                              <Payment sx={{ color: "text.quaternary" }} />
+                              <Typography color="text.quaternary">
+                                {`${dataReg.parcelaRegistro} Crédito`}
+                              </Typography>
+                            </>
+                          )}
+                          {dataReg?.formaPagamentoRegistro === "debito" && (
+                            <>
+                              <Payment sx={{ color: "text.quaternary" }} />
+                              <Typography color="text.quaternary">
+                                Débito
+                              </Typography>
+                            </>
+                          )}
+                          {dataReg?.formaPagamentoRegistro === "pix" && (
+                            <>
+                              <Pix sx={{ color: "text.quaternary" }} />
+                              <Typography color="text.quaternary">
+                                PIX
+                              </Typography>
+                            </>
+                          )}
+                          {dataReg?.formaPagamentoRegistro === "dinheiro" && (
+                            <>
+                              <Payments sx={{ color: "text.quaternary" }} />
+                              <Typography color="text.quaternary">
+                                Dinheiro
+                              </Typography>
+                            </>
+                          )}
+                        </Box>
 
-                  <Box
-                    sx={{
-                      ...style.boxValorCardRegistro,
-                      flex: 0,
-                      marginRight: "2px",
-                      gap: "8px",
-                    }}
-                  >
-                    <Tooltip title={valueObservacaoRegistro}>
-                      <IconButton>
-                        <InfoOutline />
-                      </IconButton>
-                    </Tooltip>
+                        <Box sx={style.boxValorCardRegistro}>
+                          <CurrencyExchange sx={{ color: "text.warning" }} />
+                          <Typography color="text.warning">
+                            -R$ {dataReg.valorTaxaRegistro}
+                          </Typography>
+                        </Box>
+                        <Box sx={style.boxValorCardRegistro}>
+                          <Receipt />
+                          <Typography>R$ {dataReg.valorRecebido}</Typography>
+                        </Box>
+                        <Box sx={style.boxValorCardRegistro}>
+                          <AccessTime sx={{ color: "text.quaternary" }} />
+                          <Typography color="text.quaternary">
+                            {dataReg.horarioRegistro}
+                          </Typography>
+                        </Box>
 
-                    <IconButton
-                      onClick={(event) => {
-                        handleClickOpenMenuCardRegistro(event);
+                        <Box
+                          sx={{
+                            ...style.boxValorCardRegistro,
+                            flex: 0,
+                            marginRight: "2px",
+                            gap: "8px",
+                          }}
+                        >
+                          <Tooltip title={dataReg.observacaoRegistro}>
+                            <IconButton>
+                              <InfoOutline />
+                            </IconButton>
+                          </Tooltip>
+
+                          <IconButton
+                            onClick={(event) => {
+                              handleClickOpenMenuCardRegistro(event);
+                            }}
+                          >
+                            <MoreVert />
+                          </IconButton>
+                        </Box>
+
+                        <Menu
+                          id="basic-menu"
+                          anchorEl={anchorElMenuCardRegistro}
+                          open={anchorElMenuCardRegistro}
+                          onClose={handleCloseMenuCardRegistro}
+                          slotProps={{
+                            list: {
+                              "aria-labelledby": "basic-button",
+                            },
+                          }}
+                        >
+                          <MenuItem onClick={handleOpenDialogRegistro}>
+                            Editar
+                          </MenuItem>
+                          <MenuItem
+                            sx={{ color: "red" }}
+                            onClick={handleOpenDialogDeletarRegistro}
+                          >
+                            Deletar
+                          </MenuItem>
+                        </Menu>
+                      </Box>
+                    ))}
+
+                    <Box
+                      sx={{
+                        ...style.cardRegistro,
+                        borderLeftColor: "text.error",
                       }}
                     >
-                      <MoreVert />
-                    </IconButton>
+                      <Box sx={style.boxValorCardRegistro}>
+                        <Paid sx={{ color: "text.error" }} />
+                        <Typography color="text.error">-R$ 9,00</Typography>
+                      </Box>
+                      <Box sx={style.boxValorCardRegistro}>
+                        <Pix sx={{ color: "text.quaternary" }} />
+                        <Typography color="text.quaternary">PIX</Typography>
+                      </Box>
+                      <Box sx={style.boxValorCardRegistro}>
+                        <ShoppingCart sx={{ color: "text.error" }} />
+                        <Typography color="text.error">Compra</Typography>
+                      </Box>
+                      <Box sx={style.boxValorCardRegistro}>
+                        <Store sx={{ color: "text.error" }} />
+                        <Typography color="text.error">Alimento</Typography>
+                      </Box>
+                      <Box sx={style.boxValorCardRegistro}>
+                        <AccessTime sx={{ color: "text.quaternary" }} />
+                        <Typography color="text.quaternary"> 14:46</Typography>
+                      </Box>
+                      <Box
+                        sx={{
+                          ...style.boxValorCardRegistro,
+                          flex: 0,
+                          marginRight: "2px",
+                          gap: "8px",
+                        }}
+                      >
+                        <IconButton>
+                          <InfoOutline />
+                        </IconButton>
+                        <IconButton>
+                          <MoreVert />
+                        </IconButton>
+                      </Box>
+                    </Box>
                   </Box>
-
-                  <Menu
-                    id="basic-menu"
-                    anchorEl={anchorElMenuCardRegistro}
-                    open={anchorElMenuCardRegistro}
-                    onClose={handleCloseMenuCardRegistro}
-                    slotProps={{
-                      list: {
-                        "aria-labelledby": "basic-button",
-                      },
-                    }}
-                  >
-                    <MenuItem onClick={handleOpenDialogRegistro}>
-                      Editar
-                    </MenuItem>
-                    <MenuItem
-                      sx={{ color: "red" }}
-                      onClick={handleOpenDialogDeletarRegistro}
-                    >
-                      Deletar
-                    </MenuItem>
-                  </Menu>
-                </Box>
-
-                <Box
-                  sx={{ ...style.cardRegistro, borderLeftColor: "text.error" }}
-                >
-                  <Box sx={style.boxValorCardRegistro}>
-                    <Paid sx={{ color: "text.error" }} />
-                    <Typography color="text.error">-R$ 9,00</Typography>
-                  </Box>
-                  <Box sx={style.boxValorCardRegistro}>
-                    <Pix sx={{ color: "text.quaternary" }} />
-                    <Typography color="text.quaternary">PIX</Typography>
-                  </Box>
-                  <Box sx={style.boxValorCardRegistro}>
-                    <ShoppingCart sx={{ color: "text.error" }} />
-                    <Typography color="text.error">Compra</Typography>
-                  </Box>
-                  <Box sx={style.boxValorCardRegistro}>
-                    <Store sx={{ color: "text.error" }} />
-                    <Typography color="text.error">Alimento</Typography>
-                  </Box>
-                  <Box sx={style.boxValorCardRegistro}>
-                    <AccessTime sx={{ color: "text.quaternary" }} />
-                    <Typography color="text.quaternary"> 14:46</Typography>
-                  </Box>
-                  <Box
-                    sx={{
-                      ...style.boxValorCardRegistro,
-                      flex: 0,
-                      marginRight: "2px",
-                      gap: "8px",
-                    }}
-                  >
-                    <IconButton>
-                      <InfoOutline />
-                    </IconButton>
-                    <IconButton>
-                      <MoreVert />
-                    </IconButton>
-                  </Box>
-                </Box>
-              </Box>
-            </AccordionDetails>
-          </Accordion>
-        </Box>
+                )}
+              </AccordionDetails>
+            </Accordion>
+          </Box>
+        ))}
       </Box>
 
       {/* Diálog/Modal */}
