@@ -1,16 +1,24 @@
 import {
   AccessTime,
   AccountBalance,
+  Chair,
+  Checkroom,
   Circle,
   CurrencyExchange,
   Delete,
+  Handyman,
+  Info,
   InfoOutline,
+  LocalShipping,
   MoreVert,
   Paid,
   Payment,
   Payments,
+  Person,
   Pix,
   Receipt,
+  RequestQuote,
+  Restaurant,
   Settings,
   ShoppingCart,
   Store,
@@ -255,7 +263,7 @@ const CaixaMensal = () => {
   const [valueTipoSaida, setValueTipoSaida] = useState("compra");
   const [valueFormaPagamentoSaida, setValueFormaPagamentoSaida] =
     useState("pix");
-  const [valueGrupoSaida, setValueGrupoSaida] = useState("alimentacao");
+  const [valueGrupoSaida, setValueGrupoSaida] = useState("mercado");
   const [valueObservacaoRegistro, setValueObservacaoRegistro] = useState("");
   const [anchorElMenuCardRegistro, setAnchorElMenuCardRegistro] =
     useState(null);
@@ -302,7 +310,26 @@ const CaixaMensal = () => {
       faturamentoDia: "1000,00",
       entradaDia: "2050,00",
       saidaDia: "1050,00",
-      registros: [],
+      registros: [
+        {
+          registro: "saida",
+          tipoRegistro: "compra",
+          formaPagamentoRegistro: "pix",
+          horarioRegistro: "12:10",
+          valorRegistro: "52,00",
+          grupoRegistro: "material-loja",
+          observacaoRegistro: "Compra de Café e material de limpeza",
+        },
+        {
+          registro: "saida",
+          tipoRegistro: "pagamento",
+          formaPagamentoRegistro: "dinheiro",
+          horarioRegistro: "09:10",
+          valorRegistro: "25,00",
+          grupoRegistro: "servico",
+          observacaoRegistro: "Pagamento Josué",
+        },
+      ],
     },
   ];
 
@@ -312,7 +339,7 @@ const CaixaMensal = () => {
   const grupos = {
     /* Saídas */
     compra: [
-      { value: "alimentacao", label: "Alimentação" },
+      { value: "mercado", label: "Mercado" },
       { value: "material-loja", label: "Material Loja" },
       { value: "aquisicao", label: "Aquisição" },
       { value: "outro", label: "Outro" },
@@ -321,6 +348,7 @@ const CaixaMensal = () => {
       { value: "divida", label: "Dívida" },
       { value: "conta", label: "Conta" },
       { value: "funcionario", label: "Funcionário" },
+      { value: "transporte", label: "Transporte" },
       { value: "servico", label: "Serviço" },
       { value: "outro", label: "Outro" },
     ],
@@ -382,7 +410,7 @@ const CaixaMensal = () => {
     setValueTipoSaida(event.target.value);
 
     if (event.target.value === "compra") {
-      setValueGrupoSaida("alimentacao");
+      setValueGrupoSaida("mercado");
     }
 
     if (event.target.value === "pagamento") {
@@ -640,7 +668,7 @@ const CaixaMensal = () => {
 
         {/* Caixas */}
         {dataCaixaMensal?.map((data) => (
-          <Box sx={style.boxCaixasDiario} key={data.id}>
+          <Box sx={style.boxCaixasDiario} key={data?.id}>
             <Accordion sx={style.accordionCaixaDiario}>
               <AccordionSummary
                 expandIcon={
@@ -649,14 +677,14 @@ const CaixaMensal = () => {
                   />
                 }
                 aria-controls="panel1-content"
-                id={data.id}
+                id={data?.id}
               >
                 <Typography
                   color="text.secondary"
                   fontWeight="bold"
                   component="span"
                 >
-                  {data.dia}
+                  {data?.dia}
                 </Typography>
               </AccordionSummary>
               <AccordionDetails sx={style.accordionCaixaDetails}>
@@ -666,7 +694,7 @@ const CaixaMensal = () => {
                       Faturamento do Dia
                     </Typography>
                     <Typography fontWeight={"bold"}>
-                      R$ {data.faturamentoDia}
+                      R$ {data?.faturamentoDia}
                     </Typography>
                   </Box>
                   <Box sx={style.boxInfoCaixaDetails}>
@@ -674,7 +702,7 @@ const CaixaMensal = () => {
                       Entrada do Dia
                     </Typography>
                     <Typography color="text.primary" fontWeight={"bold"}>
-                      R$ {data.entradaDia}
+                      R$ {data?.entradaDia}
                     </Typography>
                   </Box>
                   <Box sx={style.boxInfoCaixaDetails}>
@@ -682,7 +710,7 @@ const CaixaMensal = () => {
                       Saída do Dia
                     </Typography>
                     <Typography color="text.error" fontWeight={"bold"}>
-                      -R$ {data.saidaDia}
+                      -R$ {data?.saidaDia}
                     </Typography>
                   </Box>
                   <Box sx={style.boxBotaoFazerRegistro}>
@@ -703,7 +731,7 @@ const CaixaMensal = () => {
                         sx={{
                           ...style.cardRegistro,
                           borderLeftColor:
-                            dataReg.registro === "saida" ? "text.error" : "",
+                            dataReg?.registro === "saida" ? "text.error" : "",
                         }}
                       >
                         <Box sx={style.boxValorCardRegistro}>
@@ -713,14 +741,25 @@ const CaixaMensal = () => {
                           {dataReg?.tipoRegistro === "transferencia" && (
                             <SyncAlt />
                           )}
-                          <Typography>R$ {dataReg.valorRegistro}</Typography>
+                          {(dataReg?.tipoRegistro === "compra" ||
+                            dataReg?.tipoRegistro === "pagamento") && (
+                            <Paid sx={{ color: "text.error" }} />
+                          )}
+                          <Typography
+                            color={
+                              dataReg?.registro === "saida" ? "text.error" : ""
+                            }
+                          >
+                            {dataReg?.registro === "saida" && "-"}R${" "}
+                            {dataReg?.valorRegistro}
+                          </Typography>
                         </Box>
                         <Box sx={style.boxValorCardRegistro}>
                           {dataReg?.formaPagamentoRegistro === "credito" && (
                             <>
                               <Payment sx={{ color: "text.quaternary" }} />
                               <Typography color="text.quaternary">
-                                {`${dataReg.parcelaRegistro} Crédito`}
+                                {`${dataReg?.parcelaRegistro} Crédito`}
                               </Typography>
                             </>
                           )}
@@ -750,20 +789,150 @@ const CaixaMensal = () => {
                           )}
                         </Box>
 
-                        <Box sx={style.boxValorCardRegistro}>
-                          <CurrencyExchange sx={{ color: "text.warning" }} />
-                          <Typography color="text.warning">
-                            -R$ {dataReg.valorTaxaRegistro}
-                          </Typography>
-                        </Box>
-                        <Box sx={style.boxValorCardRegistro}>
-                          <Receipt />
-                          <Typography>R$ {dataReg.valorRecebido}</Typography>
-                        </Box>
+                        {dataReg?.registro === "entrada" && (
+                          <>
+                            <Box sx={style.boxValorCardRegistro}>
+                              <CurrencyExchange
+                                sx={{ color: "text.warning" }}
+                              />
+                              <Typography color="text.warning">
+                                -R$ {dataReg?.valorTaxaRegistro}
+                              </Typography>
+                            </Box>
+
+                            <Box sx={style.boxValorCardRegistro}>
+                              <Receipt />
+                              <Typography>
+                                R$ {dataReg?.valorRecebido}
+                              </Typography>
+                            </Box>
+                          </>
+                        )}
+
+                        {dataReg?.registro === "saida" && (
+                          <>
+                            {dataReg?.tipoRegistro === "compra" && (
+                              <>
+                                <Box sx={style.boxValorCardRegistro}>
+                                  <ShoppingCart sx={{ color: "text.error" }} />
+                                  <Typography color="text.error">
+                                    Compra
+                                  </Typography>
+                                </Box>
+
+                                {dataReg?.grupoRegistro === "mercado" && (
+                                  <Box sx={style.boxValorCardRegistro}>
+                                    <Store sx={{ color: "text.error" }} />
+                                    <Typography color="text.error">
+                                      Mercado
+                                    </Typography>
+                                  </Box>
+                                )}
+
+                                {dataReg?.grupoRegistro === "material-loja" && (
+                                  <Box sx={style.boxValorCardRegistro}>
+                                    <Checkroom sx={{ color: "text.error" }} />
+                                    <Typography color="text.error">
+                                      Material Loja
+                                    </Typography>
+                                  </Box>
+                                )}
+
+                                {dataReg?.grupoRegistro === "aquisicao" && (
+                                  <Box sx={style.boxValorCardRegistro}>
+                                    <Chair sx={{ color: "text.error" }} />
+                                    <Typography color="text.error">
+                                      Aquisição
+                                    </Typography>
+                                  </Box>
+                                )}
+
+                                {dataReg?.grupoRegistro === "outro" && (
+                                  <Box sx={style.boxValorCardRegistro}>
+                                    <Info sx={{ color: "text.error" }} />
+                                    <Typography color="text.error">
+                                      Outro
+                                    </Typography>
+                                  </Box>
+                                )}
+                              </>
+                            )}
+
+                            {dataReg?.tipoRegistro === "pagamento" && (
+                              <>
+                                <Box sx={style.boxValorCardRegistro}>
+                                  <Payments sx={{ color: "text.error" }} />
+                                  <Typography color="text.error">
+                                    Pagamento
+                                  </Typography>
+                                </Box>
+
+                                {dataReg?.grupoRegistro === "divida" && (
+                                  <Box sx={style.boxValorCardRegistro}>
+                                    <RequestQuote
+                                      sx={{ color: "text.error" }}
+                                    />
+                                    <Typography color="text.error">
+                                      Dívida
+                                    </Typography>
+                                  </Box>
+                                )}
+
+                                {dataReg?.grupoRegistro === "conta" && (
+                                  <Box sx={style.boxValorCardRegistro}>
+                                    <Receipt sx={{ color: "text.error" }} />
+                                    <Typography color="text.error">
+                                      Conta
+                                    </Typography>
+                                  </Box>
+                                )}
+
+                                {dataReg?.grupoRegistro === "funcionario" && (
+                                  <Box sx={style.boxValorCardRegistro}>
+                                    <Person sx={{ color: "text.error" }} />
+                                    <Typography color="text.error">
+                                      Funcionário
+                                    </Typography>
+                                  </Box>
+                                )}
+
+                                {dataReg?.grupoRegistro === "transporte" && (
+                                  <Box sx={style.boxValorCardRegistro}>
+                                    <LocalShipping
+                                      sx={{ color: "text.error" }}
+                                    />
+                                    <Typography color="text.error">
+                                      Transporte
+                                    </Typography>
+                                  </Box>
+                                )}
+
+                                {dataReg?.grupoRegistro === "servico" && (
+                                  <Box sx={style.boxValorCardRegistro}>
+                                    <Handyman sx={{ color: "text.error" }} />
+                                    <Typography color="text.error">
+                                      Serviço
+                                    </Typography>
+                                  </Box>
+                                )}
+
+                                {dataReg?.grupoRegistro === "outro" && (
+                                  <Box sx={style.boxValorCardRegistro}>
+                                    <Info sx={{ color: "text.error" }} />
+                                    <Typography color="text.error">
+                                      Outro
+                                    </Typography>
+                                  </Box>
+                                )}
+                              </>
+                            )}
+                          </>
+                        )}
+
                         <Box sx={style.boxValorCardRegistro}>
                           <AccessTime sx={{ color: "text.quaternary" }} />
                           <Typography color="text.quaternary">
-                            {dataReg.horarioRegistro}
+                            {dataReg?.horarioRegistro}
                           </Typography>
                         </Box>
 
@@ -775,7 +944,7 @@ const CaixaMensal = () => {
                             gap: "8px",
                           }}
                         >
-                          <Tooltip title={dataReg.observacaoRegistro}>
+                          <Tooltip title={dataReg?.observacaoRegistro}>
                             <IconButton>
                               <InfoOutline />
                             </IconButton>
@@ -813,49 +982,6 @@ const CaixaMensal = () => {
                         </Menu>
                       </Box>
                     ))}
-
-                    <Box
-                      sx={{
-                        ...style.cardRegistro,
-                        borderLeftColor: "text.error",
-                      }}
-                    >
-                      <Box sx={style.boxValorCardRegistro}>
-                        <Paid sx={{ color: "text.error" }} />
-                        <Typography color="text.error">-R$ 9,00</Typography>
-                      </Box>
-                      <Box sx={style.boxValorCardRegistro}>
-                        <Pix sx={{ color: "text.quaternary" }} />
-                        <Typography color="text.quaternary">PIX</Typography>
-                      </Box>
-                      <Box sx={style.boxValorCardRegistro}>
-                        <ShoppingCart sx={{ color: "text.error" }} />
-                        <Typography color="text.error">Compra</Typography>
-                      </Box>
-                      <Box sx={style.boxValorCardRegistro}>
-                        <Store sx={{ color: "text.error" }} />
-                        <Typography color="text.error">Alimento</Typography>
-                      </Box>
-                      <Box sx={style.boxValorCardRegistro}>
-                        <AccessTime sx={{ color: "text.quaternary" }} />
-                        <Typography color="text.quaternary"> 14:46</Typography>
-                      </Box>
-                      <Box
-                        sx={{
-                          ...style.boxValorCardRegistro,
-                          flex: 0,
-                          marginRight: "2px",
-                          gap: "8px",
-                        }}
-                      >
-                        <IconButton>
-                          <InfoOutline />
-                        </IconButton>
-                        <IconButton>
-                          <MoreVert />
-                        </IconButton>
-                      </Box>
-                    </Box>
                   </Box>
                 )}
               </AccordionDetails>
